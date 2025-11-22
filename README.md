@@ -1,36 +1,77 @@
-# Repositório Template
-Repositório de Template para os projetos da disciplina 
-```
-Nome do Repositório (Apague este tópico)
-  O nome do repositório deve seguir o padrão <TemaProjeto>_<Nome Projeto>.
-  O nome do projeto deve representar o que foi implementado no mesmo (Ex:
-  Game xyz, Implementações Otimizadas de Algoritmos, Aplicativo xpto)
+# A definir
 
-Os temas de projeto são:  
- - Busca - Algoritmos de busca  
- - Ord_quad - Algoritmos de ordenação O(n²)  
- - Ord_nlogn - Algoritmos de ordenação O(n*log(n))  
- - Arv - Algoritmos de manipulação de Árvores  
- - Grafo - Algoritmos de manipulação de Grafos  
- 
- Ex: Busca_ConcorrenteDaGoogle
-```
-## Alunos  
-| Matrícula | Nome |  
-|-----------------------|---------------------|  
-| xx/xxxxxxx | xxxx xxxx xxxxx |  
-| xx/xxxxxxx | xxxx xxxx xxxxx |  
-## Descrição do projeto
-Aqui você deve dizer o objetivo deste projeto e o que realmente foi feito neste repositório.
-## Guia de instalação
-Aqui devem estar descritas as dependências do projeto (versões de linguagens e ferramentas) e as instruções necessárias para executar o projeto. 
+## Alunos
+
+| Matrícula | Nome |
+|-----------------------|---------------------|
+| 23/1033737 | Artur Mendonça Arruda |
+| 23/1035464 | Lucas Mendonça Arruda |
+
+## Sobre o Projeto
+
+## História do Jogo
+
+## Sobre o Jogo
+
+## Mecânicas
+
+
+# Guia de instalação
+
 ### Dependências do projeto
-### Como executar o projeto
-## Capturas de tela
-Neste tópico você deve adicionar imagens do funcionamento do projeto.  
- - As imagens devem ser salvas no repositório.
- - Imagens salvas em domínios eternos tendem a ficar indisponíveis e devem ser evitadas.   
-## Conclusões
-Aqui você diz se o algoritmo utilizado foi útil, se tem limitações, etc.
+
+  - **Sistema operacional:** Linux ou Windows
+  - **Linguagem:** Python versão 3 ou superior
+  - **Bibliotecas externas** Pygame 2.6.1
+
+
+
+## Como executar o projeto
+
+1.  Clone o repositório
+
+<!-- end list -->
+
+```bash
+git clone https://github.com/EDAII/ArvoreBalanceada_Simulador_Emocoes.git
+```
+
+1.  Abra o terminal na pasta do projeto com o comando: `cd ArvoreBalanceada_RedBlack`
+2. (Opcional) Crie um ambiente virtual:
+3.  Baixe as bibliotecas externas na sua máquina com o comando:
+
+```bash
+pip install -r requirements.txt 
+```
+
+4.  Execute o programa com:
+    ```
+    python main.py
+    ```
+
+## Grafos
+
+
+
+### Função no Jogo
+
+
+
+### Capturas de tela
+
+## Conclusão
+
+
+### Link do Vídeo de apresentação
+
+
 ## Referências
-Caso tenha utilizado algum agoritmo como base, citar o mesmo devidamente para  evitar quaisquer denuncias de plágio.
+
+## Histórico de Versões
+
+\<div align="center"\>
+
+| Versão | Data | Descrição | Autor | Revisor | Revisão |
+|-----------|---------|--------------|----------|------------|------------|
+| `v1.0` | 22/11/2025 | Estruturação inicial da README | [Artur Mendonça](https://github.com/ArtyMend07) e [Lucas Mendonça](https://github.com/lucasarruda9)| | |
+| `v1.1` | 22/11/2025 | adicionando seção de guia de instalação | [Artur Mendonça](https://github.com/ArtyMend07) e [Lucas Mendonça](https://github.com/lucasarruda9)| | |
