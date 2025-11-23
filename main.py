@@ -67,12 +67,15 @@ def main():
 
         if not game_over:
             segundos = dt / 1000.0
-            consumo = 0.05 
-            if portas[0]: consumo += 1
-            if portas[1]: consumo += 1
-            if camera_ligada: consumo += 1
-
-            energia -= consumo * segundos * 10
+            nivel_uso = 1 
+            if portas[0]: nivel_uso += 1
+            if portas[1]: nivel_uso += 1
+            if camera_ligada: nivel_uso += 1
+            
+            # a taxa base é aproximadamente 0.104 por cento por segundo por nivel de uso
+            drenagem = nivel_uso * 0.104
+            
+            energia -= drenagem * segundos
             energia = max(0.0, energia)
 
             for anim in animatronics:
