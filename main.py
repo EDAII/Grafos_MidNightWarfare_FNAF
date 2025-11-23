@@ -6,23 +6,18 @@ from camera import desenhar_interface_camera
 
 def main():
     pygame.init()
-    # Flag SCALED ajuda na compatibilidade de resoluções em monitores diferentes
-    tela = pygame.display.set_mode((LARGURA, ALTURA), pygame.SCALED)
+    # RESIZABLE permite redimensionar a janela livremente
+    tela = pygame.display.set_mode((LARGURA, ALTURA), pygame.RESIZABLE)
     pygame.display.set_caption("FNAF-like - Demo Graph Theory")
     clock = pygame.time.Clock()
 
     portas = [False, False]
     energia = 100.0
     
-    # Definição fiel das IAs
     animatronics = [
-        # Freddy: BFS (Caminho Mínimo) - Metódico e direto
         Animatronic("Freddy", (255, 200, 0), "Palco", 30.0, tipo_ia="bfs"),
-        # Bonnie: DFS (Exploração) - Vaga pelo lado Oeste
         Animatronic("Bonnie", (180, 50, 255), "Palco", 11.0, tipo_ia="dfs"),
-        # Chica: DFS (Exploração) - Vaga pelo lado Leste
         Animatronic("Chica", (255, 255, 50), "Palco", 12.0, tipo_ia="dfs"),
-        # Foxy: Scriptado (Conectividade Direta) - Corredor
         Animatronic("Foxy", (255, 50, 50), "Pirate Cove", 15.0, tipo_ia="foxy"),
     ]
 
@@ -53,7 +48,6 @@ def main():
                     if event.key == pygame.K_d: portas[1] = not portas[1]
                     if event.key == pygame.K_c: camera_ligada = not camera_ligada
                     
-                    # Navegação das câmeras
                     if camera_ligada:
                         if event.key == pygame.K_RIGHT:
                             indice_camera = (indice_camera + 1) % len(salas_camera)
@@ -90,19 +84,15 @@ def main():
             desenhar_interface_camera(tela, salas_camera[indice_camera], animatronics)
         else:
             desenhar_mapa(tela, portas)
-            # Nota: Animatronics não são desenhados no mapa tático
-            # Para debug, descomentar a linha abaixo:
-            # for anim in animatronics: pygame.draw.circle(tela, anim.cor, (int(anim.pos_x), int(anim.pos_y)), 10)
+            # Desenhar animatronics no mapa tático
+            for anim in animatronics:
+                anim.desenhar(tela)
 
         desenhar_hud(tela, portas, energia)
 
         if game_over:
             texto_fim = pygame.font.SysFont("consolas", 60).render("GAME OVER", True, (255, 0, 0))
-            tela.blit(texto_fim, (LARGURA//2 - texto_fim.get_width()//2, ALTURA//2))
-
-        # grade estética
-        for i in range(0, ALTURA, 4):
-            pygame.draw.line(tela, (0, 0, 0, 50), (0, i), (LARGURA, i))
+            tela.blit(texto_fim, (tela.get_width()//2 - texto_fim.get_width()//2, tela.get_height()//2))
 
         pygame.display.flip()
 
