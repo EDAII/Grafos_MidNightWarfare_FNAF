@@ -8,7 +8,10 @@ COR_SALA = (0, 255, 200)
 COR_PORTA_FECHADA = (255, 50, 50)
 COR_PORTA_ABERTA = (50, 255, 50)
 COR_OFFICE = (200, 200, 200)
+COR_VITORIA = (50, 200, 50)
 
+# 60 segundos por hora da uma noite de 6 minutos
+DURACAO_HORA = 60.0
 
 POSICOES = {
     "Palco": (0.5, 0.15),
@@ -25,8 +28,7 @@ POSICOES = {
     "Office": (0.5, 0.92)
 }
 
-# funcao auxiliar para desenhar o heads up display com energia e estado das portas
-def desenhar_hud(tela, portas, energia):
+def desenhar_hud(tela, portas, energia, hora):
     w, h = tela.get_size()
     tamanho_fonte = max(20, int(h * 0.04))
     font_hud = pygame.font.SysFont("consolas", tamanho_fonte)
@@ -34,5 +36,10 @@ def desenhar_hud(tela, portas, energia):
     texto_energia = font_hud.render(f"POWER: {int(energia)}%", True, (255, 255, 255))
     texto_portas = font_hud.render(f"[A] Esq: {'FECHADA' if portas[0] else 'ABERTA'} | [D] Dir: {'FECHADA' if portas[1] else 'ABERTA'}", True, (200, 200, 200))
     
+    display_hora = "12 AM" if hora == 0 else f"{hora} AM"
+    texto_hora = font_hud.render(display_hora, True, (255, 255, 255))
+
     tela.blit(texto_energia, (20, h - tamanho_fonte * 2.5))
     tela.blit(texto_portas, (20, h - tamanho_fonte * 1.2))
+    # desenha a hora no canto superior direito
+    tela.blit(texto_hora, (w - texto_hora.get_width() - 20, 20))
