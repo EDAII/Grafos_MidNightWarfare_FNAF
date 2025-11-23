@@ -1,7 +1,7 @@
 import pygame
 
 # Configurações Visuais 
-LARGURA, ALTURA = 1024, 768
+LARGURA, ALTURA = 800, 600
 COR_FUNDO = (10, 15, 20)  # azul muito escuro
 COR_LINHA = (40, 60, 80)  # azul escuro para conexões inativas
 COR_SALA = (0, 255, 200)  # ciano neon para salas

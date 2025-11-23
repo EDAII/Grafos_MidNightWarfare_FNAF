@@ -2,42 +2,46 @@ import pygame
 from config import *
 from grafo import desenhar_mapa, GRAFO
 from animatronic import Animatronic
-
+from camera import desenhar_interface_camera 
 
 def main():
     pygame.init()
-    tela = pygame.display.set_mode((LARGURA, ALTURA))
-    pygame.display.set_caption("FNAF-like - Demo")
+    # Flag SCALED ajuda na compatibilidade de resoluções em monitores diferentes
+    tela = pygame.display.set_mode((LARGURA, ALTURA), pygame.SCALED)
+    pygame.display.set_caption("FNAF-like - Demo Graph Theory")
     clock = pygame.time.Clock()
 
-    # Começa o jogo com as portas abertas e energia no 100%
-    portas = [False, False]  # [esquerda, direita] False = aberta
+    portas = [False, False]
     energia = 100.0
     
-    # Lista de animatronics: adicione Freddy e Foxy (com seus spawns)
+    # Definição fiel das IAs
     animatronics = [
-        Animatronic("Freddy", (255, 200, 0), "Palco", 30.0),
-        Animatronic("Bonnie", (180, 50, 255), "Palco", 11.0),
-        Animatronic("Chica", (255, 255, 50), "Palco", 12.0),
-        Animatronic("Foxy", (255, 50, 50), "Pirate Cove", 15.0),
+        # Freddy: BFS (Caminho Mínimo) - Metódico e direto
+        Animatronic("Freddy", (255, 200, 0), "Palco", 30.0, tipo_ia="bfs"),
+        # Bonnie: DFS (Exploração) - Vaga pelo lado Oeste
+        Animatronic("Bonnie", (180, 50, 255), "Palco", 11.0, tipo_ia="dfs"),
+        # Chica: DFS (Exploração) - Vaga pelo lado Leste
+        Animatronic("Chica", (255, 255, 50), "Palco", 12.0, tipo_ia="dfs"),
+        # Foxy: Scriptado (Conectividade Direta) - Corredor
+        Animatronic("Foxy", (255, 50, 50), "Pirate Cove", 15.0, tipo_ia="foxy"),
     ]
 
     rodando = True
     game_over = False
     energia_acabou = False
     camera_ligada = False
-    salas_camera = list(GRAFO.keys())  # lista de salas
-    indice_camera = 0  # começa mostrando a primeira sala
+    salas_camera = list(GRAFO.keys())
+    indice_camera = 0 
 
     while rodando:
         tela.fill(COR_FUNDO)
-        dt = clock.tick(60) / 1.0  # dt em ms; vamos tratar dt como ms para decrementar energia de modo perceptível
+        dt = clock.tick(60) / 1.0 
 
         if energia <= 0 and not energia_acabou:
                 portas[0] = False
                 portas[1] = False
                 energia_acabou = True
-        
+                camera_ligada = False
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -45,53 +49,52 @@ def main():
             
             if event.type == pygame.KEYDOWN and not game_over:
                 if not energia_acabou:
-                    if event.key == pygame.K_a: # porta Esquerda (toggle)
-                        portas[0] = not portas[0]
-                    if event.key == pygame.K_d: # porta Direita (toggle)
-                        portas[1] = not portas[1]
-                    if event.key == pygame.K_c:  # toggle da câmera
-                        camera_ligada = not camera_ligada
+                    if event.key == pygame.K_a: portas[0] = not portas[0]
+                    if event.key == pygame.K_d: portas[1] = not portas[1]
+                    if event.key == pygame.K_c: camera_ligada = not camera_ligada
+                    
+                    # Navegação das câmeras
+                    if camera_ligada:
+                        if event.key == pygame.K_RIGHT:
+                            indice_camera = (indice_camera + 1) % len(salas_camera)
+                        elif event.key == pygame.K_LEFT:
+                            indice_camera = (indice_camera - 1) % len(salas_camera)
+
                 if event.key == pygame.K_r:
-                    # reset básico
                     energia = 100.0
                     portas = [False, False]
+                    camera_ligada = False
                     for anim in animatronics:
                         anim.node_atual = anim.start_node
                         anim.pos_x, anim.pos_y = POSICOES[anim.start_node]
                         anim.target_x, anim.target_y = POSICOES[anim.start_node]
+                        anim.memoria_dfs = []
                     game_over = False
 
         if not game_over:
-            # gerenciamento da energia:
-            # consumo base por segundo (convertendo dt em segundos)
             segundos = dt / 1000.0
-            consumo_base_por_segundo = 0.05  # ajuste para ritmo do jogo
-            consumo = consumo_base_por_segundo
+            consumo = 0.05 
+            if portas[0]: consumo += 1
+            if portas[1]: consumo += 1
+            if camera_ligada: consumo += 1
 
-            # cada porta fechada adiciona consumo significativo
-            if portas[0]:
-                consumo += 1
-            if portas[1]:
-                consumo += 1
-            if camera_ligada:
-                consumo += 1
-
-
-            # consumo por segundo -> consumo * segundos
-            energia -= consumo * segundos * 10  # multiplicador para ficar perceptível
+            energia -= consumo * segundos * 10
             energia = max(0.0, energia)
 
-            # atualizar animatronics
             for anim in animatronics:
                 anim.atualizar(portas)
                 if anim.node_atual == "Office":
                     game_over = True
 
-        desenhar_mapa(tela, portas)
+        if camera_ligada and not energia_acabou:
+            desenhar_interface_camera(tela, salas_camera[indice_camera], animatronics)
+        else:
+            desenhar_mapa(tela, portas)
+            # Nota: Animatronics não são desenhados no mapa tático
+            # Para debug, descomentar a linha abaixo:
+            # for anim in animatronics: pygame.draw.circle(tela, anim.cor, (int(anim.pos_x), int(anim.pos_y)), 10)
+
         desenhar_hud(tela, portas, energia)
-        
-        for anim in animatronics:
-            anim.desenhar(tela)
 
         if game_over:
             texto_fim = pygame.font.SysFont("consolas", 60).render("GAME OVER", True, (255, 0, 0))
