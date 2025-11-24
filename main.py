@@ -1,26 +1,141 @@
 import pygame
+import sys
+import random
 from config import *
 from grafo import desenhar_mapa, GRAFO
 from animatronic import Animatronic
 from camera import desenhar_interface_camera, verificar_clique_mapa
 
+def desenhar_scanlines(surface, largura, altura):
+    for i in range(0, altura, 4):
+        pygame.draw.line(surface, (0, 0, 0, 150), (0, i), (largura, i), 2)
+
+def desenhar_estatica(tela, largura, altura):
+    for _ in range(400):
+        rx = random.randint(0, largura)
+        ry = random.randint(0, altura)
+        c = random.randint(20, 100) 
+        pygame.draw.rect(tela, (c, c, c), (rx, ry, 2, 2))
+
+def menu_inicial(tela, clock):
+    largura, altura = tela.get_size()
+    
+    fonte_titulo = pygame.font.SysFont("consolas", int(altura * 0.08), bold=True)
+    fonte_subtitulo = pygame.font.SysFont("consolas", int(altura * 0.04))
+    
+    scanline_surf = pygame.Surface((largura, altura), pygame.SRCALPHA)
+    desenhar_scanlines(scanline_surf, largura, altura)
+
+    rodando_menu = True
+    while rodando_menu:
+        tela.fill((5, 5, 10)) 
+
+        desenhar_estatica(tela, largura, altura)
+
+        offset_x = random.randint(-2, 3) if random.random() > 0.7 else 0
+        offset_y = random.randint(-2, 3) if random.random() > 0.7 else 0
+
+        cor_titulo = (220, 220, 220)
+        if random.random() > 0.98:
+             cor_titulo = (200, 50, 50)
+
+        titulo_txt = "MIDNIGHT"
+        titulo_txt2 = "WARFARE"
+        
+        t1 = fonte_titulo.render(titulo_txt, True, cor_titulo)
+        t1_sombra = fonte_titulo.render(titulo_txt, True, (50, 0, 0))
+        
+        pos_x1 = largura//2 - t1.get_width()//2
+        pos_y1 = altura//3.5
+        
+        tela.blit(t1_sombra, (pos_x1 + 3, pos_y1 + 3))
+        tela.blit(t1, (pos_x1 + offset_x, pos_y1 + offset_y))
+        
+        t2 = fonte_titulo.render(titulo_txt2, True, cor_titulo)
+        t2_sombra = fonte_titulo.render(titulo_txt2, True, (50, 0, 0))
+        
+        pos_x2 = largura//2 - t2.get_width()//2
+        pos_y2 = pos_y1 + t1.get_height() + 10
+        
+        tela.blit(t2_sombra, (pos_x2 + 3, pos_y2 + 3))
+        tela.blit(t2, (pos_x2 + offset_x, pos_y2 + offset_y))
+
+        if pygame.time.get_ticks() % 1000 < 600:
+            subtitulo = fonte_subtitulo.render("> PRESS ENTER <", True, (150, 150, 150))
+            tela.blit(subtitulo, (largura//2 - subtitulo.get_width()//2, altura//2 + 100))
+
+        tela.blit(scanline_surf, (0,0))
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RETURN or event.key == pygame.K_KP_ENTER:
+                    rodando_menu = False
+
+        pygame.display.flip()
+        clock.tick(30)
+
+def executar_jumpscare(tela, anim_nome, cor_animatronic):
+    largura, altura = tela.get_size()
+    centro_x, centro_y = largura // 2, altura // 2
+    
+    start_time = pygame.time.get_ticks()
+    while pygame.time.get_ticks() - start_time < 1500: 
+        tela.fill((0, 0, 0))
+        
+        shake_x = random.randint(-20, 20)
+        shake_y = random.randint(-20, 20)
+        cx = centro_x + shake_x
+        cy = centro_y + shake_y
+        
+        if "Bonnie" in anim_nome:
+            pygame.draw.ellipse(tela, cor_animatronic, (cx - 120, cy - 400, 80, 250))
+            pygame.draw.ellipse(tela, cor_animatronic, (cx + 40, cy - 400, 80, 250))
+        elif "Foxy" in anim_nome:
+            pygame.draw.polygon(tela, cor_animatronic, [(cx - 150, cy - 100), (cx - 50, cy - 350), (cx, cy - 150)])
+            pygame.draw.polygon(tela, cor_animatronic, [(cx + 150, cy - 100), (cx + 50, cy - 350), (cx, cy - 150)])
+        elif "Freddy" in anim_nome or "Golden" in anim_nome:
+            pygame.draw.circle(tela, cor_animatronic, (cx - 180, cy - 180), 70)
+            pygame.draw.circle(tela, cor_animatronic, (cx + 180, cy - 180), 70)
+        elif "Chica" in anim_nome:
+            pygame.draw.ellipse(tela, cor_animatronic, (cx - 50, cy - 320, 100, 150))
+
+        pygame.draw.circle(tela, cor_animatronic, (cx, cy), 280)
+        
+        pygame.draw.circle(tela, (0, 0, 0), (cx - 80, cy - 50), 70)
+        pygame.draw.circle(tela, (0, 0, 0), (cx + 80, cy - 50), 70)
+        
+        pygame.draw.circle(tela, (255, 255, 255), (cx - 80, cy - 50), 15)
+        pygame.draw.circle(tela, (255, 255, 255), (cx + 80, cy - 50), 15)
+        
+        rect_boca = pygame.Rect(cx - 100, cy + 80, 200, 120)
+        pygame.draw.rect(tela, (0, 0, 0), rect_boca)
+        
+        pygame.display.flip()
+        pygame.time.delay(30)
+
 def main():
     pygame.init()
-    tela = pygame.display.set_mode((LARGURA, ALTURA), pygame.RESIZABLE)
-    pygame.display.set_caption("FNAF")
+    tela = pygame.display.set_mode((LARGURA, ALTURA)) 
+    pygame.display.set_caption("Five Nights at Python's")
     clock = pygame.time.Clock()
 
-    # inicializacao de variaveis de estado
+    menu_inicial(tela, clock)
+
     portas = [False, False]
     energia = 100.0
     hora_atual = 0
     acumulador_tempo = 0.0
     
     animatronics = [
-        Animatronic("Freddy", (255, 200, 0), "Palco", 30.0, tipo_ia="bfs"),
-        Animatronic("Bonnie", (180, 50, 255), "Palco", 11.0, tipo_ia="dfs"),
-        Animatronic("Chica", (255, 255, 50), "Palco", 12.0, tipo_ia="dfs"),
-        Animatronic("Foxy", (255, 50, 50), "Pirate Cove", 6.0, tipo_ia="foxy"),
+        Animatronic("Freddy", (100, 50, 0), "Palco", 30.0, tipo_ia="bfs"),
+        Animatronic("Bonnie", (100, 100, 200), "Palco", 11.0, tipo_ia="dfs"),
+        Animatronic("Chica", (255, 255, 0), "Palco", 12.0, tipo_ia="dfs"),
+        Animatronic("Foxy", (200, 50, 50), "Pirate Cove", 6.0, tipo_ia="foxy"),
+        Animatronic("G.Freddy", COR_GOLDEN, "Palco", 0.0, tipo_ia="golden"), 
     ]
 
     rodando = True
@@ -30,9 +145,9 @@ def main():
     camera_ligada = False
     
     sala_atual_camera = "Palco" 
+    quem_matou = None
 
     while rodando:
-        # limpa a tela sempre no comeco do frame
         tela.fill(COR_FUNDO)
         dt = clock.tick(60) / 1.0 
         segundos = dt / 1000.0
@@ -41,7 +156,6 @@ def main():
             if event.type == pygame.QUIT:
                 rodando = False
             
-            # input so funciona se o jogo nao acabou
             if not game_over and not vitoria:
                 if event.type == pygame.MOUSEBUTTONDOWN and camera_ligada:
                     nova_sala = verificar_clique_mapa(pygame.mouse.get_pos())
@@ -55,8 +169,9 @@ def main():
                             if event.key == pygame.K_d: portas[1] = not portas[1]
                         if event.key == pygame.K_c: camera_ligada = not camera_ligada
             
-            # reset funciona mesmo na tela de game over
             if event.type == pygame.KEYDOWN and event.key == pygame.K_r:
+                menu_inicial(tela, clock) 
+                
                 energia = 100.0
                 portas = [False, False]
                 camera_ligada = False
@@ -66,15 +181,20 @@ def main():
                 energia_acabou = False
                 game_over = False
                 vitoria = False
+                quem_matou = None
                 for anim in animatronics:
-                    anim.node_atual = anim.start_node
-                    anim.pos_x, anim.pos_y = POSICOES[anim.start_node]
-                    anim.target_x, anim.target_y = POSICOES[anim.start_node]
-                    anim.memoria_dfs = []
+                    if anim.tipo_ia != "golden":
+                        anim.node_atual = anim.start_node
+                        anim.pos_x, anim.pos_y = POSICOES[anim.start_node]
+                        anim.target_x, anim.target_y = POSICOES[anim.start_node]
+                        anim.memoria_dfs = []
+                        anim.foxy_estagio = 0
+                        anim.foxy_cooldown = 30.0
+                        anim.ultimo_movimento = 0 
+                    else:
+                        anim.node_atual = "Palco" 
 
-        # logica do jogo roda apenas se nao acabou
         if not game_over and not vitoria:
-            # sistema de tempo
             acumulador_tempo += segundos
             if acumulador_tempo >= DURACAO_HORA:
                 acumulador_tempo = 0
@@ -82,7 +202,6 @@ def main():
                 if hora_atual == 6:
                     vitoria = True
 
-            # sistema de energia
             if energia <= 0 and not energia_acabou:
                 portas[0] = False
                 portas[1] = False
@@ -97,30 +216,46 @@ def main():
             drenagem = nivel_uso * 0.104
             energia -= drenagem * segundos
             energia = max(0.0, energia)
+            
             for anim in animatronics:
-                anim.atualizar(portas)
+                anim.atualizar(portas, camera_ligada, sala_atual_camera)
                 if anim.node_atual == "Office":
-                    game_over = True
+                    executar_jumpscare(tela, anim.nome, anim.cor)
+                    if anim.nome == "G.Freddy":
+                        pygame.quit()
+                        sys.exit()
+                    else:
+                        game_over = True
+                        quem_matou = anim.nome
 
-            # renderizacao do jogo normal
             if camera_ligada and not energia_acabou:
                 desenhar_interface_camera(tela, sala_atual_camera, animatronics)
             else:
                 desenhar_mapa(tela, portas)
-
+                
             desenhar_hud(tela, portas, energia, hora_atual)
+            
+            scanline_surf = pygame.Surface((LARGURA, ALTURA), pygame.SRCALPHA)
+            desenhar_scanlines(scanline_surf, LARGURA, ALTURA)
+            tela.blit(scanline_surf, (0,0))
 
-        # renderizacao das telas de fim de jogo
         elif game_over:
             tela.fill((0, 0, 0))
-            fonte_go = pygame.font.SysFont("consolas", 80)
+            desenhar_estatica(tela, LARGURA, ALTURA) 
+            
+            fonte_go = pygame.font.SysFont("consolas", 80, bold=True)
             fonte_sub = pygame.font.SysFont("consolas", 30)
             
+            off_x = random.randint(-2, 2)
             txt_go = fonte_go.render("GAME OVER", True, (200, 0, 0))
             txt_reset = fonte_sub.render("Pressione R para reiniciar", True, (150, 150, 150))
             
-            tela.blit(txt_go, (LARGURA//2 - txt_go.get_width()//2, ALTURA//2 - 50))
+            tela.blit(txt_go, (LARGURA//2 - txt_go.get_width()//2 + off_x, ALTURA//2 - 50))
             tela.blit(txt_reset, (LARGURA//2 - txt_reset.get_width()//2, ALTURA//2 + 50))
+            
+            scanline_surf = pygame.Surface((LARGURA, ALTURA), pygame.SRCALPHA)
+            desenhar_scanlines(scanline_surf, LARGURA, ALTURA)
+            tela.blit(scanline_surf, (0,0))
 
         elif vitoria:
             tela.fill((0, 0, 0))
@@ -129,7 +264,7 @@ def main():
             
             txt_win = fonte_win.render("6 AM", True, COR_VITORIA)
             txt_msg = fonte_sub.render("Sobreviveu a noite!", True, (255, 255, 255))
-            txt_reset = fonte_sub.render("Pressione R para jogar novamente", True, (150, 150, 150))
+            txt_reset = fonte_sub.render("Pressione R para reiniciar", True, (150, 150, 150))
             
             tela.blit(txt_win, (LARGURA//2 - txt_win.get_width()//2, ALTURA//2 - 60))
             tela.blit(txt_msg, (LARGURA//2 - txt_msg.get_width()//2, ALTURA//2 + 20))

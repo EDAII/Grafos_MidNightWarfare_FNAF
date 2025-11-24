@@ -9,6 +9,7 @@ COR_PORTA_FECHADA = (255, 50, 50)
 COR_PORTA_ABERTA = (50, 255, 50)
 COR_OFFICE = (200, 200, 200)
 COR_VITORIA = (50, 200, 50)
+COR_GOLDEN = (255, 215, 0)
 
 # 60 segundos por hora da uma noite de 6 minutos
 DURACAO_HORA = 60.0

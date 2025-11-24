@@ -10,7 +10,6 @@ class Animatronic:
         self.cor = cor
         self.start_node = start_node
         self.node_atual = start_node
-        # tempo em segundos entre movimentos quanto menor mais rapido
         self.agressividade = agressividade
         self.tipo_ia = tipo_ia 
         self.ultimo_movimento = time.time()
@@ -18,45 +17,73 @@ class Animatronic:
         self.target_x, self.target_y = POSICOES[start_node]
         self.memoria_dfs = []
         
-        # definicao de zonas proibidas para bonnie e chica
+        self.foxy_estagio = 0 
+        self.foxy_cooldown = 5.0 
+
         self.salas_proibidas = set()
         if nome == "Bonnie":
             self.salas_proibidas = {"East Hall", "East Hall Corner", "Cozinha", "Banheiros", "Pirate Cove"}
         elif nome == "Chica":
             self.salas_proibidas = {"West Hall", "West Hall Corner", "Despensa", "Backstage", "Pirate Cove"}
 
-    # logica principal de atualizacao de estado e posicao
-    def atualizar(self, portas_fechadas):
+    def atualizar(self, portas_fechadas, camera_ligada=False, sala_observada=None):
         self.pos_x += (self.target_x - self.pos_x) * 0.12
         self.pos_y += (self.target_y - self.pos_y) * 0.12
 
-        # verifica se é hora de mover baseado na agressividade
+        if self.tipo_ia == "golden":
+            if random.randint(0, 10000) == 666:
+                self.node_atual = "Office"
+            return
+
+        if self.tipo_ia == "foxy" and self.node_atual == "Pirate Cove":
+            sendo_observado = camera_ligada and (sala_observada == "Pirate Cove")
+            
+            if not sendo_observado:
+                self.foxy_cooldown -= 0.016 
+            else:
+                self.foxy_cooldown = min(self.foxy_cooldown + 0.1, 5.0)
+
+            if self.foxy_cooldown <= 0:
+                self.foxy_estagio += 1
+                self.foxy_cooldown = 5.0 
+                if self.foxy_estagio > 3:
+                    self.node_atual = "West Hall" 
+                    self.target_x, self.target_y = POSICOES["West Hall"]
+                    self.foxy_estagio = 0
+                    self.ultimo_movimento = time.time() 
+            return 
+
         if time.time() - self.ultimo_movimento <= self.agressividade:
             return
 
         vizinhos = GRAFO[self.node_atual]
         proximo = self.node_atual
 
-        # verifica tentativa de entrada no escritorio e estado das portas
         if "Office" in vizinhos:
             lado = 0 if self.node_atual == "West Hall Corner" else 1 if self.node_atual == "East Hall Corner" else None
             if lado is not None:
                 if portas_fechadas[lado]:
-                    # foxy reseta ao bater na porta
                     if self.tipo_ia == "foxy":
                         self.node_atual = self.start_node
                         self.target_x, self.target_y = POSICOES[self.start_node]
-                    self.ultimo_movimento = time.time()
+                        self.foxy_estagio = 0
+                        self.foxy_cooldown = 5.0
+                        self.ultimo_movimento = time.time()
+                    else:
+                        recuo = [v for v in vizinhos if v != "Office"]
+                        if recuo:
+                            self.node_atual = random.choice(recuo)
+                            self.target_x, self.target_y = POSICOES[self.node_atual]
+                            self.memoria_dfs = [] 
+                            self.ultimo_movimento = time.time()
                     return
                 else:
                     proximo = "Office"
         
-        # se nao esta atacando o escritorio calcula proximo passo baseado na ia
         if proximo != "Office":
             if self.tipo_ia == "bfs":
                 proximo = obter_proximo_passo_bfs(self.node_atual, "Office")
             elif self.tipo_ia == "dfs":
-                # filtra vizinhos usando as salas proibidas definidas no init
                 todos_vizinhos = GRAFO.get(self.node_atual, [])
                 vizinhos_validos = [v for v in todos_vizinhos if v not in self.salas_proibidas]
                 
@@ -66,10 +93,14 @@ class Animatronic:
                 proximo = obter_proximo_passo_dfs(self.node_atual, self.memoria_dfs, vizinhos_validos)
                 
             elif self.tipo_ia == "foxy":
-                if self.node_atual == "Pirate Cove":
-                    if random.random() < 0.4: proximo = "West Hall"
-                elif self.node_atual == "West Hall":
-                    proximo = "West Hall Corner"
+                if self.node_atual == "West Hall":
+                    if time.time() - self.ultimo_movimento > 2.5:
+                        proximo = "West Hall Corner"
+                    else:
+                        proximo = "West Hall"
+                elif self.node_atual == "West Hall Corner":
+                    proximo = "Office"
+        
         self.node_atual = proximo
         self.target_x, self.target_y = POSICOES[proximo]
         self.ultimo_movimento = time.time()
@@ -78,8 +109,8 @@ class Animatronic:
         w, h = tela.get_size()
         px = int(self.pos_x * w)
         py = int(self.pos_y * h)
-        pygame.draw.circle(tela, (*self.cor, 150), (px, py), 20)
-        
-        font = pygame.font.SysFont("arial", 12, bold=True)
-        texto = font.render(self.nome[0], True, (255,255,255))
-        tela.blit(texto, (px - texto.get_width()//2, py - texto.get_height()//2))
+        if self.tipo_ia != "golden":
+            pygame.draw.circle(tela, (*self.cor, 150), (px, py), 20)
+            font = pygame.font.SysFont("arial", 12, bold=True)
+            texto = font.render(self.nome[0], True, (255,255,255))
+            tela.blit(texto, (px - texto.get_width()//2, py - texto.get_height()//2))
