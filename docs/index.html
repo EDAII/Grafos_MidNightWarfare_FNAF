@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-       
         .golden-card:hover {
             border-color: #ffd700;
             box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
@@ -15,6 +14,52 @@
         .ai-tag.rng {
             border: 1px solid #ffd700;
             color: #ffd700;
+        }
+
+        /* Estilos da Galeria adicionados aqui para garantir a formatação pedida */
+        .gallery {
+            padding: 80px 0;
+            background: #050505; /* Mantém consistência com o fundo */
+            border-bottom: 1px solid #111;
+        }
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem; /* Espaço considerável solicitado */
+            margin-top: 3rem;
+        }
+        .gallery-item {
+            background: #0a0a0a;
+            border: 1px solid #222;
+            padding: 20px; /* Espaço interno para não colar */
+            transition: 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+        .gallery-item:hover {
+            border-color: #00ff41; /* Verde primário */
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+        }
+        .gallery-caption {
+            color: #e0e0e0;
+            font-size: 1.1rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 15px; /* Espaço entre título e imagem */
+            padding-bottom: 10px;
+            border-bottom: 1px solid #333; /* Linha separadora */
+            font-family: 'Share Tech Mono', monospace;
+        }
+        .gallery-caption i {
+            color: #ff003c; /* Vermelho secundário */
+            margin-right: 10px;
+        }
+        .gallery-item img {
+            width: 100%;
+            height: auto;
+            border-radius: 2px;
+            display: block;
         }
     </style>
 </head>
@@ -32,6 +77,7 @@
                     <li><a href="#home" class="active">Status</a></li>
                     <li><a href="#sobre">Arquitetura</a></li>
                     <li><a href="#animatronics">IAs</a></li>
+                    <li><a href="#galeria">Galeria</a></li>
                     <li><a href="#grafo">Grafo</a></li>
                     <li><a href="#instalacao">Deploy</a></li>
                 </ul>
@@ -173,6 +219,57 @@
         </div>
     </section>
 
+    <section id="galeria" class="gallery">
+        <div class="container">
+            <h2 class="section-title">Galeria do Sistema</h2>
+            <p class="section-desc">Visualização dos algoritmos e da interface do jogo.</p>
+            
+            <div class="gallery-grid">
+                <div class="gallery-item">
+                    <div class="gallery-caption">
+                        <i class="fas fa-power-off"></i> Interface Inicial
+                    </div>
+                    <img src="../assets/inicio.png" alt="Menu Inicial">
+                </div>
+
+                <div class="gallery-item">
+                    <div class="gallery-caption">
+                        <i class="fas fa-map"></i> Grafo de Conexões
+                    </div>
+                    <img src="../assets/mapa.png" alt="Mapa de Grafos">
+                </div>
+
+                <div class="gallery-item">
+                    <div class="gallery-caption">
+                        <i class="fas fa-video"></i> Monitoramento
+                    </div>
+                    <img src="../assets/cameras.png" alt="Sistema de Câmeras">
+                </div>
+
+                <div class="gallery-item">
+                    <div class="gallery-caption">
+                        <i class="fas fa-code"></i> Algoritmo BFS (Freddy)
+                    </div>
+                    <img src="../assets/bfs.png" alt="Código BFS">
+                </div>
+
+                <div class="gallery-item">
+                    <div class="gallery-caption">
+                        <i class="fas fa-code"></i> Algoritmo DFS (Bonnie)
+                    </div>
+                    <img src="../assets/dfs.png" alt="Código DFS">
+                </div>
+
+                <div class="gallery-item">
+                    <div class="gallery-caption">
+                        <i class="fas fa-trophy"></i> Condição de Vitória
+                    </div>
+                    <img src="../assets/vitoria.png" alt="Tela de Vitória">
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section id="grafo" class="arvore">
         <div class="container">
             <h2 class="section-title">Análise de Algoritmos</h2>
@@ -222,7 +319,7 @@
                 </div>
                 <div class="terminal-content">
                     <div class="line"><span class="prompt">$</span> <span class="cmd">git clone</span> https://github.com/EDAII/Grafos_MidNightWarfare_FNAF</div>
-                    <div class="line"><span class="prompt">$</span> <span class="cmd">cd</span> Grafos_grupo15</div>
+                    <div class="line"><span class="prompt">$</span> <span class="cmd">cd</span> Grafos_MidNightWarfare_FNAF</div>
                     <div class="line"><span class="prompt">$</span> <span class="cmd">pip install</span> pygame</div>
                     <div class="line"><span class="prompt">$</span> <span class="cmd">python</span> main.py</div>
                     <div class="line output">pygame 2.6.1 (SDL 2.28.4, Python 3.12.10)</div>
@@ -264,7 +361,7 @@
                 </div>
                 <div class="footer-section">
                     <h4><i class="fab fa-github"></i> Código</h4>
-                    <p><a href="https://github.com/EDAII/Grafos_MidNightWarfare_FNAF" target="_blank">Repositório Oficial</a></p>
+                    <p><a href="https://github.com/EDAII/Grafos_MidNightWarfare_FNAF" target="_blank">Repositório</a></p>
                 </div>
             </div>
             <div class="footer-bottom">
