@@ -19,6 +19,8 @@ class Animatronic:
         
         self.foxy_estagio = 0 
         self.foxy_cooldown = 5.0 
+        self.foxy_chegada_westhall = 0
+        self.foxy_animacao_concluida = False
 
         self.salas_proibidas = set()
         if nome == "Bonnie":
@@ -31,7 +33,7 @@ class Animatronic:
         self.pos_y += (self.target_y - self.pos_y) * 0.12
 
         if self.tipo_ia == "golden":
-            if random.randint(0, 10000) == 666:
+            if random.randint(0, 80000) == 666: #Quase 1/4 de chance de aparecer durante uma noite de 360 segundos
                 self.node_atual = "Office"
             return
 
@@ -46,11 +48,13 @@ class Animatronic:
             if self.foxy_cooldown <= 0:
                 self.foxy_estagio += 1
                 self.foxy_cooldown = 5.0 
-                if self.foxy_estagio > 3:
+                if self.foxy_estagio == 3:
                     self.node_atual = "West Hall" 
                     self.target_x, self.target_y = POSICOES["West Hall"]
                     self.foxy_estagio = 0
-                    self.ultimo_movimento = time.time() 
+                    self.ultimo_movimento = time.time()
+                    self.foxy_chegada_westhall = 0
+                    self.foxy_animacao_concluida = False
             return 
 
         if time.time() - self.ultimo_movimento <= self.agressividade:
@@ -94,9 +98,11 @@ class Animatronic:
                 
             elif self.tipo_ia == "foxy":
                 if self.node_atual == "West Hall":
-                    if time.time() - self.ultimo_movimento > 2.5:
+                    if self.foxy_animacao_concluida:
                         proximo = "West Hall Corner"
+                        self.foxy_animacao_concluida = False
                     else:
+                        self.ultimo_movimento = time.time()
                         proximo = "West Hall"
                 elif self.node_atual == "West Hall Corner":
                     proximo = "Office"

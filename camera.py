@@ -1,6 +1,5 @@
 import pygame
-import math
-import time
+import random
 from config import *
 from grafo import GRAFO
 
@@ -31,6 +30,7 @@ def desenhar_interface_camera(tela, sala_atual, animatronics):
             cor_foxy = foxy.cor if estado > 0 else (100, 100, 100)
             
             pygame.draw.rect(tela, (50, 0, 0), (150, 150, 200, 200)) 
+            
             if estado > 0 and estado < 3:
                 pygame.draw.circle(tela, cor_foxy, (250, 250), 40 + (estado * 20))
             
@@ -57,28 +57,61 @@ def desenhar_interface_camera(tela, sala_atual, animatronics):
             px = centro_x + dx
             py = centro_y + dy
             
-            if anim.nome == "Foxy" and sala_atual == "West Hall":
-                ticks = pygame.time.get_ticks()
-                offset_corrida = (ticks % 500) / 500.0 
-                pos_x_corrida = 100 + (offset_corrida * 300) 
-                
-                s = pygame.Surface((400, 300), pygame.SRCALPHA)
-                
-                for j in range(3):
-                    alpha = 100 - (j * 30)
-                    lag = j * 30
-                    x_ghost = 100 + (((ticks - lag) % 500) / 500.0 * 300)
-                    pygame.draw.circle(s, (*anim.cor, alpha), (int(x_ghost) - 50, 150), 30)
-                
-                pygame.draw.circle(s, anim.cor, (int(pos_x_corrida) - 50, 150), 35)
-                
-                tela.blit(s, (50, 100))
-                
-                if ticks % 200 < 100:
-                    txt_run = fonte.render("RUNNING!", True, (255, 0, 0))
-                    tela.blit(txt_run, (180, 350))
-                
-                continue 
+            if anim.nome == "Foxy":
+                if sala_atual == "West Hall":
+                    if anim.foxy_chegada_westhall == 0:
+                        anim.foxy_chegada_westhall = pygame.time.get_ticks()
+
+                    duracao_corrida = 1800 
+                    tempo_passado = pygame.time.get_ticks() - anim.foxy_chegada_westhall
+                    progresso = min(tempo_passado / duracao_corrida, 1.0)
+
+                    if progresso < 1.0:
+                        start_x, start_y = 350, 180
+                        end_x, end_y = 80, 350
+                        
+                        start_radius = 20
+                        end_radius = 80
+
+                        current_x = start_x + (end_x - start_x) * progresso
+                        current_y = start_y + (end_y - start_y) * progresso
+                        current_radius = start_radius + (end_radius - start_radius) * progresso
+                        
+                        ghost_surface = pygame.Surface((500, 500), pygame.SRCALPHA)
+                        
+                        for j in range(4):
+                            if j == 0:
+                                cx, cy, cr, alpha = current_x, current_y, current_radius, 255
+                            else:
+                                lag_prog = max(0, progresso - (j * 0.02))
+                                cx = start_x + (end_x - start_x) * lag_prog
+                                cy = start_y + (end_y - start_y) * lag_prog
+                                cr = start_radius + (end_radius - start_radius) * lag_prog
+                                alpha = 100 - (j * 25)
+                            
+                            cor_base = (*anim.cor, alpha)
+                            
+                            ear_h = cr * 1.2
+                            pygame.draw.polygon(ghost_surface, cor_base, [
+                                (cx - cr*0.7, cy - cr*0.3), 
+                                (cx - cr*0.9, cy - cr*0.3 - ear_h), 
+                                (cx - cr*0.2, cy - cr*0.8)
+                            ])
+                            pygame.draw.polygon(ghost_surface, cor_base, [
+                                (cx + cr*0.7, cy - cr*0.3), 
+                                (cx + cr*0.9, cy - cr*0.3 - ear_h), 
+                                (cx + cr*0.2, cy - cr*0.8)
+                            ])
+                            
+                            pygame.draw.circle(ghost_surface, cor_base, (int(cx), int(cy)), int(cr))
+
+                        tela.blit(ghost_surface, (0, 0))
+                        
+                    else:
+                        anim.foxy_animacao_concluida = True
+                        txt_vazio = fonte.render("...", True, (50, 50, 50))
+                        tela.blit(txt_vazio, (230, 230))
+                    continue
 
             pygame.draw.circle(tela, anim.cor, (px, py), 35)
             nome = fonte.render(anim.nome, True, anim.cor)

@@ -1,6 +1,7 @@
 import pygame
 import sys
 import random
+import time
 from config import *
 from grafo import desenhar_mapa, GRAFO
 from animatronic import Animatronic
@@ -146,6 +147,17 @@ def main():
     
     sala_atual_camera = "Palco" 
     quem_matou = None
+    
+    confetes = []
+    for _ in range(150):
+        confetes.append({
+            "x": random.randint(0, LARGURA),
+            "y": random.randint(-600, 0),
+            "vel": random.randint(2, 7),
+            "cor": (random.randint(100, 255), random.randint(100, 255), random.randint(100, 255)),
+            "tam": random.randint(5, 10)
+        })
+    tempo_vitoria_inicio = 0
 
     while rodando:
         tela.fill(COR_FUNDO)
@@ -182,6 +194,10 @@ def main():
                 game_over = False
                 vitoria = False
                 quem_matou = None
+                tempo_vitoria_inicio = 0
+                for c in confetes:
+                    c["y"] = random.randint(-600, 0)
+                
                 for anim in animatronics:
                     if anim.tipo_ia != "golden":
                         anim.node_atual = anim.start_node
@@ -190,7 +206,9 @@ def main():
                         anim.memoria_dfs = []
                         anim.foxy_estagio = 0
                         anim.foxy_cooldown = 30.0
-                        anim.ultimo_movimento = 0 
+                        anim.foxy_chegada_westhall = 0
+                        anim.foxy_animacao_concluida = False
+                        anim.ultimo_movimento = time.time()
                     else:
                         anim.node_atual = "Palco" 
 
@@ -213,7 +231,7 @@ def main():
             if portas[1]: nivel_uso += 1
             if camera_ligada: nivel_uso += 1
             
-            drenagem = nivel_uso * 0.104
+            drenagem = nivel_uso * 0.244
             energia -= drenagem * segundos
             energia = max(0.0, energia)
             
@@ -259,16 +277,35 @@ def main():
 
         elif vitoria:
             tela.fill((0, 0, 0))
-            fonte_win = pygame.font.SysFont("consolas", 80)
-            fonte_sub = pygame.font.SysFont("consolas", 30)
             
-            txt_win = fonte_win.render("6 AM", True, COR_VITORIA)
-            txt_msg = fonte_sub.render("Sobreviveu a noite!", True, (255, 255, 255))
-            txt_reset = fonte_sub.render("Pressione R para reiniciar", True, (150, 150, 150))
+            if tempo_vitoria_inicio == 0:
+                tempo_vitoria_inicio = pygame.time.get_ticks()
             
-            tela.blit(txt_win, (LARGURA//2 - txt_win.get_width()//2, ALTURA//2 - 60))
-            tela.blit(txt_msg, (LARGURA//2 - txt_msg.get_width()//2, ALTURA//2 + 20))
-            tela.blit(txt_reset, (LARGURA//2 - txt_reset.get_width()//2, ALTURA//2 + 80))
+            tempo_decorrido = pygame.time.get_ticks() - tempo_vitoria_inicio
+            
+            fonte_grande = pygame.font.SysFont("consolas", 120, bold=True)
+            fonte_peq = pygame.font.SysFont("consolas", 30)
+            
+            if tempo_decorrido < 2000:
+                txt_hora = fonte_grande.render("5 AM", True, (100, 100, 100))
+                tela.blit(txt_hora, (LARGURA//2 - txt_hora.get_width()//2, ALTURA//2 - 60))
+            else:
+                for c in confetes:
+                    pygame.draw.rect(tela, c["cor"], (c["x"], c["y"], c["tam"], c["tam"]))
+                    c["y"] += c["vel"]
+                    if c["y"] > ALTURA:
+                        c["y"] = random.randint(-100, -10)
+                        c["x"] = random.randint(0, LARGURA)
+
+                txt_hora = fonte_grande.render("6 AM", True, COR_VITORIA)
+                txt_msg = fonte_peq.render("SOBREVIVEU A NOITE", True, (255, 255, 255))
+                
+                tela.blit(txt_hora, (LARGURA//2 - txt_hora.get_width()//2, ALTURA//2 - 80))
+                tela.blit(txt_msg, (LARGURA//2 - txt_msg.get_width()//2, ALTURA//2 + 40))
+                
+                if tempo_decorrido > 4000:
+                    txt_reset = fonte_peq.render("Pressione R para reiniciar", True, (150, 150, 150))
+                    tela.blit(txt_reset, (LARGURA//2 - txt_reset.get_width()//2, ALTURA//2 + 100))
 
         pygame.display.flip()
 

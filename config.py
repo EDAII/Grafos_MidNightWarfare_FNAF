@@ -12,7 +12,7 @@ COR_VITORIA = (50, 200, 50)
 COR_GOLDEN = (255, 215, 0)
 
 # 60 segundos por hora da uma noite de 6 minutos
-DURACAO_HORA = 60.0
+DURACAO_HORA = 30.0
 
 POSICOES = {
     "Palco": (0.5, 0.15),
