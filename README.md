@@ -152,8 +152,12 @@ O uso de grafos permitiu replicar o jogo Five Nights at Fredy's num contexto aca
 
 ### Link do Vídeo de apresentação
 
+[Link Vídeo](https://youtu.be/OmfMR_i_qqU)
+
+[Link Vídeo](https://youtube.com/embed/OmfMR_i_qqU)
 
 ## Referências
+Material do professor
 
 ## Histórico de Versões
 
