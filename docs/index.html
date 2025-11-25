@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Midnight Warfare - Grafos</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+       
+        .golden-card:hover {
+            border-color: #ffd700;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+        }
+        .ai-tag.rng {
+            border: 1px solid #ffd700;
+            color: #ffd700;
+        }
+    </style>
+</head>
+<body>
+    <div class="scanlines"></div>
+    <div class="vignette"></div>
+
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-content">
+                <h1 class="logo glitch" data-text="WARFARE">
+                    <i class="fas fa-video"></i> MIDNIGHT WARFARE
+                </h1>
+                <ul class="nav-links">
+                    <li><a href="#home" class="active">Status</a></li>
+                    <li><a href="#sobre">Arquitetura</a></li>
+                    <li><a href="#animatronics">IAs</a></li>
+                    <li><a href="#grafo">Grafo</a></li>
+                    <li><a href="#instalacao">Deploy</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <section id="home" class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="sys-alert">
+                    <i class="fas fa-code-branch"></i> Trabalho IV - Grafos
+                </div>
+                <h2 class="hero-title glitch" data-text="Midnight Warfare">Midnight Warfare</h2>
+                <p class="hero-subtitle type-text">Aplicação prática de teoria dos grafos em um jogo de terror inspirado em Five Nights At Freddy's.</p>
+                
+                <div class="hero-buttons">
+                    <a href="#instalacao" class="btn btn-primary">
+                        <i class="fas fa-play"></i> Executar
+                    </a>
+                    <a href="https://github.com/EDAII/Grafos_MidNightWarfare_FNAF" class="btn btn-secondary" target="_blank">
+                        <i class="fab fa-github"></i> Repositório
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="sobre" class="sobre">
+        <div class="container">
+            <h2 class="section-title">Implementação Técnica</h2>
+            <div class="cards-grid">
+                <div class="card">
+                    <div class="card-icon">
+                        <i class="fas fa-project-diagram"></i>
+                    </div>
+                    <h3>Estrutura do Mapa</h3>
+                    <p>O ambiente do jogo é modelado como um Grafo Não-Direcionado, utilizando listas de adjacência para representar as conexões entre as salas e os corredores.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">
+                        <i class="fas fa-microchip"></i>
+                    </div>
+                    <h3>Algoritmos</h3>
+                    <p>Implementação de Busca em Largura (BFS) para cálculo de rotas ótimas e Busca em Profundidade (DFS) para simulação de exploração de ambiente por IAs.</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <h3>Complexidade</h3>
+                    <p>A lógica de decisão é executada a cada atualização de quadro, sendo responsivo tempo real com complexidade de busca linear em relação às arestas do grafo.</p>
+                </div>
+            </div>
+
+            <div class="project-info">
+                <div class="info-section">
+                    <h3><i class="fas fa-users"></i> Autores</h3>
+                    <table class="developers-table">
+                        <tr>
+                            <td class="dev-label">DESENVOLVEDOR</td>
+                            <td class="dev-value">Artur Mendonça Arruda</td>
+                        </tr>
+                        <tr>
+                            <td class="dev-label">MATRÍCULA</td>
+                            <td class="dev-value">23/1033737</td>
+                        </tr>
+                        <tr>
+                            <td class="dev-label" style="padding-top: 15px;">DESENVOLVEDOR</td>
+                            <td class="dev-value" style="padding-top: 15px;">Lucas Mendonça Arruda</td>
+                        </tr>
+                        <tr>
+                            <td class="dev-label">MATRÍCULA</td>
+                            <td class="dev-value">23/1035464</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="info-section">
+                    <h3><i class="fas fa-layer-group"></i> Stack</h3>
+                    <p class="tech-stack"><strong>Python 3 | Pygame</strong></p>
+                    <p>Projeto desenvolvido para a disciplina de Estrutura de Dados II, com foco na aplicação de conceitos de grafos.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="animatronics" class="emocoes">
+        <div class="container">
+            <h2 class="section-title">Lógica dos Agentes</h2>
+            <p class="section-desc">Cada oponente utiliza um algoritmo distinto para navegar pelo grafo do mapa.</p>
+            
+            <div class="emotions-grid">
+                <div class="emotion-card freddy-card">
+                    <div class="card-header">
+                        <span class="ai-tag bfs">BFS</span>
+                        <div class="emotion-emoji"><i class="fas fa-microphone-lines"></i></div>
+                    </div>
+                    <h3>Freddy</h3>
+                    <p>Utiliza <strong>Busca em Largura</strong>. O algoritmo garante que ele sempre encontrará o caminho com menor número de arestas até o nó alvo, otimizando sua perseguição.</p>
+                </div>
+
+                <div class="emotion-card bonnie-card">
+                    <div class="card-header">
+                        <span class="ai-tag dfs">DFS</span>
+                        <div class="emotion-emoji"><i class="fas fa-guitar"></i></div>
+                    </div>
+                    <h3>Bonnie</h3>
+                    <p>Implementa <strong>Busca em Profundidade</strong> limitada ao subgrafo Oeste. Visita nós adjacentes em profundidade antes de retroceder, simulando um padrão de exploração.</p>
+                </div>
+
+                <div class="emotion-card chica-card">
+                    <div class="card-header">
+                        <span class="ai-tag dfs">DFS</span>
+                        <div class="emotion-emoji"><i class="fas fa-pizza-slice"></i></div>
+                    </div>
+                    <h3>Chica</h3>
+                    <p>Similar ao Bonnie, mas restrita ao subgrafo Leste. O uso de DFS faz com que ela explore extremidades do grafo antes de convergir para o objetivo.</p>
+                </div>
+
+                <div class="emotion-card foxy-card">
+                    <div class="card-header">
+                        <span class="ai-tag heuristic">Estado Direto</span>
+                        <div class="emotion-emoji"><i class="fas fa-skull-crossbones"></i></div>
+                    </div>
+                    <h3>Foxy</h3>
+                    <p>Opera por transição de estados baseada em cooldown. Ignora a busca convencional, realizando travessia direta de arestas pré-definidas quando ativo.</p>
+                </div>
+
+                <div class="emotion-card golden-card">
+                    <div class="card-header">
+                        <span class="ai-tag rng">Grafo Desconexo</span>
+                        <div class="emotion-emoji"><i class="fas fa-question"></i></div>
+                    </div>
+                    <h3>Golden Freddy</h3>
+                    <p>Atua como um <strong>Vértice Desconexo</strong>. Sua lógica ignora as arestas do grafo, operando via probabilidade estocástica para realizar uma transição imediata ao nó do escritório.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="grafo" class="arvore">
+        <div class="container">
+            <h2 class="section-title">Análise de Algoritmos</h2>
+            
+            <div class="tree-explanation">
+                <div class="tree-concept">
+                    <h3><i class="fas fa-sitemap"></i> Representação</h3>
+                    <p>O mapa do jogo é representado computacionalmente como um grafo <strong>G(V, E)</strong>, onde V são as salas e E são os corredores. A escolha da Lista de Adjacência favorece a performance de iteração sobre vizinhos.</p>
+                </div>
+            </div>
+
+            <div class="operations-grid">
+                <div class="operation-card">
+                    <h4>Espaço</h4>
+                    <p class="complexity">O(V + E)</p>
+                    <p>Memória utilizada pela Lista de Adjacência.</p>
+                </div>
+                <div class="operation-card">
+                    <h4>BFS</h4>
+                    <p class="complexity">O(V + E)</p>
+                    <p>Complexidade temporal para encontrar o caminho ótimo.</p>
+                </div>
+                <div class="operation-card">
+                    <h4>DFS</h4>
+                    <p class="complexity">O(V + E)</p>
+                    <p>Complexidade temporal para travessia completa do componente.</p>
+                </div>
+                <div class="operation-card">
+                    <h4>Acesso</h4>
+                    <p class="complexity">O(1)</p>
+                    <p>Custo médio para acessar a lista de vizinhos de um vértice.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="instalacao" class="instalacao">
+        <div class="container">
+            <h2 class="section-title">Execução</h2>
+            
+            <div class="terminal-window">
+                <div class="terminal-bar">
+                    <div class="btn-term red"></div>
+                    <div class="btn-term yellow"></div>
+                    <div class="btn-term green"></div>
+                    <span class="term-title">user@dev:~/midnight-warfare</span>
+                </div>
+                <div class="terminal-content">
+                    <div class="line"><span class="prompt">$</span> <span class="cmd">git clone</span> https://github.com/EDAII/Grafos_MidNightWarfare_FNAF</div>
+                    <div class="line"><span class="prompt">$</span> <span class="cmd">cd</span> Grafos_grupo15</div>
+                    <div class="line"><span class="prompt">$</span> <span class="cmd">pip install</span> pygame</div>
+                    <div class="line"><span class="prompt">$</span> <span class="cmd">python</span> main.py</div>
+                    <div class="line output">pygame 2.6.1 (SDL 2.28.4, Python 3.12.10)</div>
+                    <div class="line output">Hello from the pygame community. https://www.pygame.org/contribute.html</div>
+                    <div class="line cursor">_</div>
+                </div>
+            </div>
+
+            <div class="requirements">
+                <h3><i class="fas fa-laptop-code"></i> Requisitos</h3>
+                <div class="requirements-grid">
+                    <div class="requirement-item">
+                        <i class="fab fa-python"></i>
+                        <span>Python 3.x</span>
+                    </div>
+                    <div class="requirement-item">
+                        <i class="fas fa-gamepad"></i>
+                        <span>Pygame</span>
+                    </div>
+                    <div class="requirement-item">
+                        <i class="fas fa-computer-mouse"></i>
+                        <span>Mouse</span>
+                    </div>
+                    <div class="requirement-item">
+                        <i class="fas fa-keyboard"></i>
+                        <span>Teclado</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4><i class="fas fa-university"></i> Disciplina</h4>
+                    <p>Estrutura de Dados e Algoritmos II - Grafos</p>
+                </div>
+                <div class="footer-section">
+                    <h4><i class="fab fa-github"></i> Código</h4>
+                    <p><a href="https://github.com/EDAII/Grafos_MidNightWarfare_FNAF" target="_blank">Repositório Oficial</a></p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Grupo 15. Desenvolvido por Artur M. Arruda e Lucas M. Arruda.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="java.js"></script>
+</body>
+</html>
