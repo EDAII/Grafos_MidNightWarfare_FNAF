@@ -120,20 +120,29 @@ Fechar a porta significa cortar a ligação dos corredores com o escritório.
 
 #### BFS
 
-
+![Imagem do algoritmo de BFS](assets/bfs.png)
 
 #### DFS
 
+![Imagem do algoritmo de DFS](assets/dfs.png)
 
 ### Jogo rodando
 
 #### Tela de início
 
+![Tela inicial](assets/inicio.png)
 
 #### Tela do mapa
 
+![Tela do mapa](assets/mapa.png)
 
 #### Tela das câmeras
+
+![Câmeras](assets/cameras.png)
+
+#### Tela vitória
+
+![Vitória](assets/vitoria.png)
 
 
 ####
@@ -148,10 +157,8 @@ O uso de grafos permitiu replicar o jogo Five Nights at Fredy's num contexto aca
 
 ## Histórico de Versões
 
-\<div align="center"\>
-
 | Versão | Data | Descrição | Autor | Revisor | Revisão |
 |-----------|---------|--------------|----------|------------|------------|
 | `v1.0` | 22/11/2025 | Estruturação inicial da README | [Artur Mendonça](https://github.com/ArtyMend07) e [Lucas Mendonça](https://github.com/lucasarruda9)| | |
 | `v1.1` | 22/11/2025 | adicionando seção de guia de instalação | [Artur Mendonça](https://github.com/ArtyMend07) e [Lucas Mendonça](https://github.com/lucasarruda9)| | |
-| `v1.2` | 24/11/2025 | Adicionando explicação sobre o projeto [Lucas Mendonça](https://github.com/lucasarruda9) | [Artur Mendonça](https://github.com/ArtyMend07) | |
+| `v1.2` | 24/11/2025 | Adicionando explicação sobre o projeto | [Lucas Mendonça](https://github.com/lucasarruda9) | [Artur Mendonça](https://github.com/ArtyMend07) | | 

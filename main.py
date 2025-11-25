@@ -121,7 +121,7 @@ def executar_jumpscare(tela, anim_nome, cor_animatronic):
 def main():
     pygame.init()
     tela = pygame.display.set_mode((LARGURA, ALTURA)) 
-    pygame.display.set_caption("Five Nights at Python's")
+    pygame.display.set_caption("Midnight Warfare Fnaf")
     clock = pygame.time.Clock()
 
     menu_inicial(tela, clock)
