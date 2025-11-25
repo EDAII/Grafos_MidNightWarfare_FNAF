@@ -120,21 +120,26 @@ Fechar a porta significa cortar a ligação dos corredores com o escritório.
 
 #### BFS
 
+![Imagem do algoritmo de BFS](assets/bfs.png)
 
 
 #### DFS
 
+![Imagem do algoritmo de DFS](assets/dfs.png)
 
 ### Jogo rodando
 
 #### Tela de início
 
+![Tela inicial](assets/inicio.png)
 
 #### Tela do mapa
 
+![Tela do mapa](assets/mapa.png)
 
 #### Tela das câmeras
 
+![Câmeras](assets/cameras.png)
 
 ####
 ## Conclusão
